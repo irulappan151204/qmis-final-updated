@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block title %}Add User - Issue Tracking System{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Add New User</h5>
+                    <form method="POST" action="{{ url_for('add_user') }}">
+                        <div class="mb-3">
+                            <label for="username" class="form-label">Username</label>
+                            <input type="text" class="form-control" id="username" name="username" required>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Password</label>
+                            <input type="password" class="form-control" id="password" name="password" required>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="role" class="form-label">Role</label>
+                            <select class="form-select" id="role" name="role" required>
+                                <option value="">Select Role</option>
+                                <option value="Admin">Admin</option>
+                                <option value="Team Lead">Team Lead</option>
+                                <option value="Team Member">Team Member</option>
+                                <option value="MD">MD</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="team_id" class="form-label">Team</label>
+                            <select class="form-select" id="team_id" name="team_id">
+                                <option value="">Select Team</option>
+                                {% for team in teams %}
+                                <option value="{{ team.team_id }}">{{ team.team_name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-user-plus"></i> Add User
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

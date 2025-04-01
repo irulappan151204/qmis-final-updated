@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - QMIS DSR</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2ecc71;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --text-color: #2c3e50;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            overflow: hidden;
+        }
+
+        .split-screen {
+            display: flex;
+            width: 100%;
+            height: 100vh;
+        }
+
+        .left-side {
+            flex: 1;
+            background: linear-gradient(135deg, #2ecc71, #27ae60);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+            color: white;
+        }
+
+        .left-side::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><rect width="1" height="1" fill="rgba(255,255,255,0.1)"/></svg>');
+            opacity: 0.1;
+            animation: backgroundMove 20s linear infinite;
+        }
+
+        @keyframes backgroundMove {
+            0% { background-position: 0 0; }
+            100% { background-position: 100% 100%; }
+        }
+
+        .logo {
+            width: 150px;
+            height: 150px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .logo img {
+            width: 80%;
+            height: 80%;
+            object-fit: contain;
+        }
+
+        .school-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .school-subtitle {
+            font-size: 1.1rem;
+            text-align: center;
+            opacity: 0.9;
+            max-width: 600px;
+            line-height: 1.6;
+        }
+
+        .right-side {
+            flex: 1;
+            background: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+        }
+
+        .login-container {
+            width: 100%;
+            max-width: 400px;
+            padding: 2rem;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .login-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            color: var(--primary-color);
+            text-align: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .login-subtitle {
+            color: #666;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid #eee;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(46, 204, 113, 0.1);
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #666;
+        }
+
+        .btn-login {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-login:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(46, 204, 113, 0.3);
+        }
+
+        .alert {
+            border-radius: 10px;
+            border: none;
+            margin-bottom: 1.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .split-screen {
+                flex-direction: column;
+            }
+
+            .left-side {
+                display: none;
+            }
+
+            .right-side {
+                padding: 1rem;
+            }
+
+            .login-container {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="split-screen">
+        <div class="left-side">
+            <div class="logo">
+                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="QMIS Logo">
+            </div>
+            <h1 class="school-name">Queen Mira International School</h1>
+            <p class="school-subtitle">The first CBSE school to be accredited by The Council of International Schools (CIS)</p>
+        </div>
+        <div class="right-side">
+            <div class="login-container">
+                <h2 class="login-title">QMIS DSR</h2>
+                <p class="login-subtitle">Please login to your account</p>
+                
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                                {{ message }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+
+                <form method="POST" action="{{ url_for('login') }}">
+                    <div class="form-group">
+                        <input type="text" class="form-control" name="username" placeholder="User ID" required>
+                    </div>
+                    <div class="form-group position-relative">
+                        <input type="password" class="form-control" name="password" id="password" placeholder="Password" required>
+                        <i class="fas fa-eye password-toggle" onclick="togglePassword()"></i>
+                    </div>
+                    <button type="submit" class="btn btn-login">Login</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function togglePassword() {
+            const passwordInput = document.getElementById('password');
+            const toggleIcon = document.querySelector('.password-toggle');
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                toggleIcon.classList.remove('fa-eye');
+                toggleIcon.classList.add('fa-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                toggleIcon.classList.remove('fa-eye-slash');
+                toggleIcon.classList.add('fa-eye');
+            }
+        }
+    </script>
+</body>
+</html> 

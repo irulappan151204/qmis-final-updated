@@ -1,0 +1,12 @@
+Flask==2.3.3
+Flask-SQLAlchemy==3.1.1
+Flask-SocketIO==5.3.6
+Flask-Login==0.6.2
+Flask-Bcrypt==1.0.1
+Flask-Migrate==4.0.5
+mysql-connector-python==8.1.0
+mysqlclient==2.2.0
+python-dotenv==1.0.0
+reportlab==4.0.4
+eventlet==0.33.3
+Werkzeug==2.3.7 

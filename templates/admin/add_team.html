@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="text-center">Add New Team</h3>
+                </div>
+                <div class="card-body">
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                        {% if messages %}
+                            {% for category, message in messages %}
+                                <div class="alert alert-{{ category }}">{{ message }}</div>
+                            {% endfor %}
+                        {% endif %}
+                    {% endwith %}
+
+                    <form method="POST">
+                        <div class="mb-3">
+                            <label for="team_name" class="form-label">Team Name</label>
+                            <input type="text" class="form-control" id="team_name" name="team_name" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="lead_id" class="form-label">Team Lead</label>
+                            <select class="form-select" id="lead_id" name="lead_id">
+                                <option value="">Select a Team Lead</option>
+                                {% for lead in team_leads %}
+                                <option value="{{ lead.user_id }}">{{ lead.username }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary">Add Team</button>
+                            <a href="{{ url_for('manage_teams') }}" class="btn btn-secondary">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

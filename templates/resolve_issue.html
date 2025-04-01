@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block title %}Resolve Issue - Issue Tracking System{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-body">
+                    <h3 class="card-title text-center mb-4">Resolve Issue #{{ issue.issue_id }}</h3>
+                    
+                    <div class="mb-4">
+                        <h5>Issue Details</h5>
+                        <p><strong>Title:</strong> {{ issue.issue_title }}</p>
+                        <p><strong>Description:</strong> {{ issue.issue_description }}</p>
+                        <p><strong>Priority:</strong> 
+                            <span class="badge bg-{{ 'danger' if issue.priority == 'High' else 'warning' if issue.priority == 'Medium' else 'success' }}">
+                                {{ issue.priority }}
+                            </span>
+                        </p>
+                    </div>
+                    
+                    <form method="POST" action="{{ url_for('resolve_issue', issue_id=issue.issue_id) }}">
+                        <div class="mb-3">
+                            <label for="resolution" class="form-label">Resolution Description</label>
+                            <textarea class="form-control" id="resolution" name="resolution" rows="5" required
+                                    placeholder="Please provide a detailed description of how the issue was resolved..."></textarea>
+                        </div>
+                        
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-success">
+                                <i class="fas fa-check"></i> Mark as Solved
+                            </button>
+                            <a href="{{ url_for('view_issue', issue_id=issue.issue_id) }}" class="btn btn-secondary">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

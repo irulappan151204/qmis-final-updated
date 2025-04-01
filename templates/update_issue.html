@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block title %}Update Issue - Issue Tracking System{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-body">
+                    <h3 class="card-title text-center mb-4">Update Issue #{{ issue.issue_id }}</h3>
+                    
+                    <div class="mb-4">
+                        <h5>Current Issue Details</h5>
+                        <p><strong>Title:</strong> {{ issue.issue_title }}</p>
+                        <p><strong>Priority:</strong> 
+                            <span class="badge bg-{{ 'danger' if issue.priority == 'High' else 'warning' if issue.priority == 'Medium' else 'success' }}">
+                                {{ issue.priority }}
+                            </span>
+                        </p>
+                        <p><strong>Current Status:</strong> 
+                            <span class="badge bg-{{ 'success' if issue.status == 'Solved' else 'warning' if issue.status == 'In Progress' else 'secondary' }}">
+                                {{ issue.status }}
+                            </span>
+                        </p>
+                    </div>
+                    
+                    <form method="POST" action="{{ url_for('update_issue_status', issue_id=issue.issue_id) }}">
+                        <div class="mb-3">
+                            <label for="status" class="form-label">Update Status</label>
+                            <select class="form-select" id="status" name="status" required>
+                                <option value="Pending" {% if issue.status == 'Pending' %}selected{% endif %}>Pending</option>
+                                <option value="In Progress" {% if issue.status == 'In Progress' %}selected{% endif %}>In Progress</option>
+                            </select>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="description" class="form-label">Update Description</label>
+                            <textarea class="form-control" id="description" name="description" rows="5" required
+                                    placeholder="Please provide an updated description of the issue...">{{ issue.issue_description }}</textarea>
+                        </div>
+                        
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> Update Issue
+                            </button>
+                            <a href="{{ url_for('view_issue', issue_id=issue.issue_id) }}" class="btn btn-secondary">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

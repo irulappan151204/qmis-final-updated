@@ -1,0 +1,127 @@
+{% extends "base.html" %}
+
+{% block title %}Team Lead Dashboard - Issue Tracking System{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-3">
+            <div class="card bg-primary text-white mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Total Issues</h5>
+                    <h2 class="card-text">{{ total_issues }}</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-success text-white mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Solved Issues</h5>
+                    <h2 class="card-text">{{ solved_issues }}</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-warning text-white mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">In Progress</h5>
+                    <h2 class="card-text">{{ in_progress_issues }}</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-danger text-white mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Pending Issues</h5>
+                    <h2 class="card-text">{{ pending_issues }}</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Recent Issues</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Title</th>
+                                    <th>Status</th>
+                                    <th>Priority</th>
+                                    <th>Created</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for issue in recent_issues %}
+                                <tr>
+                                    <td>{{ issue.issue_title }}</td>
+                                    <td>
+                                        <span class="badge bg-{{ 'success' if issue.status == 'Solved' else 'primary' if issue.status == 'In Progress' else 'secondary' }}">
+                                            {{ issue.status }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-{{ 'danger' if issue.priority == 'High' else 'warning' if issue.priority == 'Medium' else 'info' }}">
+                                            {{ issue.priority }}
+                                        </span>
+                                    </td>
+                                    <td>{{ issue.created_at.strftime('%Y-%m-%d') }}</td>
+                                    <td>
+                                        <a href="{{ url_for('view_issue', issue_id=issue.issue_id) }}" class="btn btn-sm btn-info">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Issue Status Distribution</h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="statusChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const ctx = document.getElementById('statusChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: {{ performance_data.labels | tojson }},
+            datasets: [{
+                data: {{ performance_data.data | tojson }},
+                backgroundColor: [
+                    '#28a745',  // Success (green)
+                    '#007bff',  // Primary (blue)
+                    '#6c757d'   // Secondary (gray)
+                ]
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false
+        }
+    });
+});
+</script>
+{% endblock %} 

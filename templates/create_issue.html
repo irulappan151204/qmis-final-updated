@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block title %}Create Issue - Issue Tracking System{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-body">
+                    <h3 class="card-title text-center mb-4">Create New Issue</h3>
+                    <form method="POST" action="{{ url_for('create_issue') }}">
+                        <div class="mb-3">
+                            <label for="title" class="form-label">Issue Title</label>
+                            <input type="text" class="form-control" id="title" name="title" required>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="description" class="form-label">Issue Description</label>
+                            <textarea class="form-control" id="description" name="description" rows="5" required></textarea>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="priority" class="form-label">Priority</label>
+                            <select class="form-select" id="priority" name="priority" required>
+                                <option value="Low">Low</option>
+                                <option value="Medium">Medium</option>
+                                <option value="High">High</option>
+                            </select>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="team_id" class="form-label">Assign to Team</label>
+                            <select class="form-select" id="team_id" name="team_id" required>
+                                {% for team in teams %}
+                                <option value="{{ team.team_id }}">{{ team.team_name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary">Create Issue</button>
+                            <a href="{{ url_for('dashboard') }}" class="btn btn-secondary">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

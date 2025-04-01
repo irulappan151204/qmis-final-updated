@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Issue - Issue Tracking System{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Edit Issue</h5>
+                    <form method="POST" action="{{ url_for('edit_issue', issue_id=issue.issue_id) }}">
+                        <div class="mb-3">
+                            <label for="title" class="form-label">Title</label>
+                            <input type="text" class="form-control" id="title" name="title" value="{{ issue.issue_title }}" required>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="description" class="form-label">Description</label>
+                            <textarea class="form-control" id="description" name="description" rows="5" required>{{ issue.issue_description }}</textarea>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="priority" class="form-label">Priority</label>
+                            <select class="form-select" id="priority" name="priority" required>
+                                <option value="Low" {% if issue.priority == 'Low' %}selected{% endif %}>Low</option>
+                                <option value="Medium" {% if issue.priority == 'Medium' %}selected{% endif %}>Medium</option>
+                                <option value="High" {% if issue.priority == 'High' %}selected{% endif %}>High</option>
+                            </select>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="status" class="form-label">Status</label>
+                            <select class="form-select" id="status" name="status" required>
+                                <option value="Pending" {% if issue.status == 'Pending' %}selected{% endif %}>Pending</option>
+                                <option value="In Progress" {% if issue.status == 'In Progress' %}selected{% endif %}>In Progress</option>
+                                <option value="Solved" {% if issue.status == 'Solved' %}selected{% endif %}>Solved</option>
+                            </select>
+                        </div>
+
+                        {% if current_user.role == 'Admin' %}
+                        <div class="mb-3">
+                            <label for="team_id" class="form-label">Team</label>
+                            <select class="form-select" id="team_id" name="team_id" required>
+                                {% for team in teams %}
+                                <option value="{{ team.team_id }}" {% if issue.team_id == team.team_id %}selected{% endif %}>
+                                    {{ team.team_name }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        {% endif %}
+
+                        {% if issue.status == 'Solved' %}
+                        <div class="mb-3">
+                            <label for="solved_description" class="form-label">Solution Description</label>
+                            <textarea class="form-control" id="solved_description" name="solved_description" rows="3">{{ issue.solved_description }}</textarea>
+                        </div>
+                        {% endif %}
+                        
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> Save Changes
+                        </button>
+                        <a href="{{ url_for('view_issue', issue_id=issue.issue_id) }}" class="btn btn-secondary">
+                            <i class="fas fa-times"></i> Cancel
+                        </a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

@@ -1,0 +1,186 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1 class="display-4 mb-0">Managing Director Dashboard</h1>
+            <p class="text-muted">Welcome back, {{ current_user.username }}</p>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Quick Actions</h5>
+                    <div class="d-flex gap-3">
+                        <a href="{{ url_for('generate_report') }}" class="btn btn-primary flex-grow-1">
+                            <i class="fas fa-file-pdf me-2"></i>Generate Report
+                        </a>
+                        <a href="{{ url_for('list_issues') }}" class="btn btn-success flex-grow-1">
+                            <i class="fas fa-list me-2"></i>View All Issues
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- System Overview -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card stat-card">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="card-subtitle mb-2 text-muted">Total Teams</h6>
+                            <h2 class="card-title mb-0">{{ teams|length }}</h2>
+                        </div>
+                        <div class="stat-icon">
+                            <i class="fas fa-users fa-2x text-primary"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card stat-card">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="card-subtitle mb-2 text-muted">Total Users</h6>
+                            <h2 class="card-title mb-0">{{ users|length }}</h2>
+                        </div>
+                        <div class="stat-icon">
+                            <i class="fas fa-user fa-2x text-success"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card stat-card">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="card-subtitle mb-2 text-muted">Total Issues</h6>
+                            <h2 class="card-title mb-0">{{ total_issues }}</h2>
+                        </div>
+                        <div class="stat-icon">
+                            <i class="fas fa-tasks fa-2x text-warning"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card stat-card">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="card-subtitle mb-2 text-muted">Open Issues</h6>
+                            <h2 class="card-title mb-0">{{ open_issues }}</h2>
+                        </div>
+                        <div class="stat-icon">
+                            <i class="fas fa-exclamation-circle fa-2x text-danger"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Issues -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="card-title mb-0">Recent Issues</h5>
+                    <a href="{{ url_for('list_issues') }}" class="btn btn-sm btn-outline-primary">View All</a>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Title</th>
+                                    <th>Team</th>
+                                    <th>Priority</th>
+                                    <th>Status</th>
+                                    <th>Created</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for issue in recent_issues %}
+                                <tr>
+                                    <td>{{ issue.issue_title }}</td>
+                                    <td>{{ issue.team.team_name }}</td>
+                                    <td>
+                                        <span class="badge bg-{{ 'danger' if issue.priority == 'High' else 'warning' if issue.priority == 'Medium' else 'success' }}">
+                                            {{ issue.priority }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-{{ 'success' if issue.status == 'Solved' else 'warning' if issue.status == 'In Progress' else 'danger' }}">
+                                            {{ issue.status }}
+                                        </span>
+                                    </td>
+                                    <td>{{ issue.created_at.strftime('%Y-%m-%d') }}</td>
+                                    <td>
+                                        <a href="{{ url_for('view_issue', issue_id=issue.issue_id) }}" class="btn btn-sm btn-outline-primary">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block extra_css %}
+<style>
+    .stat-card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .stat-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    }
+
+    .stat-icon {
+        width: 50px;
+        height: 50px;
+        background: rgba(46, 204, 113, 0.1);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .table th {
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 0.85rem;
+        letter-spacing: 0.5px;
+    }
+
+    .badge {
+        padding: 0.5em 1em;
+        font-weight: 500;
+    }
+
+    .btn-sm {
+        padding: 0.4rem 0.8rem;
+    }
+</style>
+{% endblock %}
+{% endblock %} 
